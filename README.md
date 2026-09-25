@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CodeForge — Autonomous Coding Agent
 
 A portfolio-ready autonomous software-engineering agent built with **Python, FastAPI, LangGraph and the OpenAI API**.
@@ -223,3 +224,7 @@ autonomous-coding-agent/
 ├── run_windows.bat
 └── run_mac_linux.sh
 ```
+=======
+# autonomous-ai-incident-intelligence-platform
+Production-grade AI incident investigation platform using deep learning, agentic AI, RAG, MCP, Kubernetes and AWS.
+>>>>>>> a842bb4d5a665040382b398d19a612593c30309f
