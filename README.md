@@ -43,7 +43,7 @@ Pass → Complete
 Fail → Fix → Retry
 ```
 
-CodeForge works only inside the controlled `workspace/` directory, so the agent cannot modify arbitrary files on the computer.
+CodeForge works directly on the existing project inside the `workspace/` directory.
 
 ---
 
@@ -99,51 +99,35 @@ test_string_utils.py ..
 7 passed
 ```
 
----
-
-## Project Structure
+The final execution status was:
 
 ```text
-codeforge-autonomous-coding-agent/
-│
-├── app/
-│   ├── agent.py
-│   ├── config.py
-│   ├── llm.py
-│   ├── main.py
-│   ├── models.py
-│   ├── workspace.py
-│   │
-│   ├── static/
-│   │   ├── app.js
-│   │   └── style.css
-│   │
-│   └── templates/
-│       └── index.html
-│
-├── assets/
-│   ├── codeforge-dashboard.png
-│   └── codeforge-validation.png
-│
-├── tests/
-│   └── test_workspace.py
-│
-├── workspace/
-│   ├── calculator.py
-│   ├── string_utils.py
-│   ├── task_manager.py
-│   ├── test_calculator.py
-│   ├── test_string_utils.py
-│   └── test_task_manager.py
-│
-├── .env.example
-├── .gitignore
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── run_windows.bat
-└── run_mac_linux.sh
+Completed
+Task completed and validation passed.
 ```
+
+---
+
+## Another Example
+
+CodeForge was also asked to create a Python calculator module.
+
+The agent generated:
+
+- `calculator.py`
+- `test_calculator.py`
+
+The implementation included:
+
+- addition
+- subtraction
+- multiplication
+- division
+- division-by-zero handling
+- type hints
+- automated pytest coverage
+
+The generated tests passed successfully.
 
 ---
 
@@ -168,15 +152,13 @@ GEMINI_MODEL=your_available_gemini_model
 MAX_ITERATIONS=3
 ```
 
-Do not commit your real `.env` file.
-
 ### 3. Run on Windows
 
 ```powershell
 .\run_windows.bat
 ```
 
-Or:
+Or run directly:
 
 ```powershell
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8001
@@ -190,30 +172,39 @@ http://127.0.0.1:8001
 
 ---
 
-## Safety
-
-CodeForge is intentionally restricted.
-
-- file changes are limited to `workspace/`
-- path traversal outside the workspace is rejected
-- arbitrary shell commands are blocked
-- only approved validation commands are allowed
-- autonomous retries are limited
-
-Supported validation commands include:
+## Example Prompt
 
 ```text
-pytest
-python -m pytest
-python -m unittest
-python -m compileall .
+Create a small task manager module.
+
+Add a typed Task dataclass containing:
+
+- title
+- completed
+- priority
+
+Add functions to:
+
+- create tasks
+- mark a task as completed
+- filter completed tasks
+- sort tasks by priority
+
+Add pytest tests covering:
+
+- normal cases
+- empty lists
+- duplicate titles
+- invalid priority values
+
+Keep the implementation clean and make all tests pass.
 ```
 
 ---
 
 ## Summary
 
-CodeForge demonstrates how an LLM can be used inside a **controlled autonomous software-engineering workflow**.
+CodeForge demonstrates how an LLM can be used inside an **autonomous software-engineering workflow**.
 
 Instead of simply returning code, the system can:
 
