@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeForge — Autonomous Coding Agent</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="badge">AGENTIC AI • SOFTWARE ENGINEERING</div>
+      <h1>CodeForge</h1>
+      <p class="subtitle">
+        An autonomous coding agent that inspects a codebase, plans changes,
+        edits files, validates its work and retries when tests fail.
+      </p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Give the agent a task</h2>
+        <textarea id="task" placeholder="Example: Create a Python calculator module with add, subtract, multiply and divide functions plus pytest tests."></textarea>
+        <button id="run">Run autonomous agent</button>
+        <p class="hint">The agent can only modify files inside the <code>workspace/</code> directory.</p>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <h2>Workspace</h2>
+          <button class="secondary" id="refresh">Refresh</button>
+        </div>
+        <pre id="workspace">Loading...</pre>
+      </div>
+    </section>
+
+    <section class="card output-card">
+      <div class="row">
+        <h2>Agent execution</h2>
+        <span id="status" class="status idle">Idle</span>
+      </div>
+      <div id="output" class="output">
+        Run a task to see planning, file changes and validation results.
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
