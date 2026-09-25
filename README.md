@@ -1,205 +1,111 @@
-<<<<<<< HEAD
 # CodeForge — Autonomous Coding Agent
 
-A portfolio-ready autonomous software-engineering agent built with **Python, FastAPI, LangGraph and the OpenAI API**.
+CodeForge is an **agentic AI coding system** that works directly on an existing project workspace.
 
-It can:
+Instead of only generating code as text, CodeForge can inspect project files, understand a coding task, plan changes, create or update code, generate tests, run validation automatically, and retry when something fails.
 
-- inspect an existing project workspace
-- plan code changes
-- create, update and delete files
-- run restricted validation commands
-- inspect failures
-- retry its implementation automatically
-- expose the workflow through a FastAPI backend and browser UI
+In simple terms, CodeForge acts like a small autonomous software engineer.
 
-## Architecture
+---
 
-```text
-User task
-   |
-   v
-FastAPI
-   |
-   v
-LangGraph workflow
-   |
-   +--> Planner (LLM)
-   |
-   +--> Editor (sandboxed file tools)
-   |
-   +--> Validator (safe command allowlist)
-   |
-   +--> Retry on failure
-   |
-   v
-Completed implementation
-```
+## What It Does
 
-## Safety design
+CodeForge can:
 
-The model does **not** receive unrestricted shell access.
+- read an existing codebase
+- understand a coding task
+- create new files
+- update existing files
+- generate pytest tests
+- run validation automatically
+- use test failures as feedback
+- retry with corrected code
+- mark a task complete only after validation succeeds
 
-- File edits are limited to `workspace/`.
-- Path traversal is rejected.
-- Validation commands are allowlisted.
-- Shell operators and arbitrary network/system commands are not executed.
-- The agent retries at most `MAX_ITERATIONS` times.
+---
 
-## Quick start — Windows
-
-### 1. Extract the project and open it in VS Code
-
-### 2. Create your environment file
-
-Copy:
+## How It Works
 
 ```text
-.env.example
+Task
+ ↓
+Inspect workspace
+ ↓
+Plan changes
+ ↓
+Edit files
+ ↓
+Generate tests
+ ↓
+Run validation
+ ↓
+Pass → Complete
+Fail → Fix → Retry
 ```
 
-to:
+CodeForge works only inside the controlled `workspace/` directory, so the agent cannot modify arbitrary files on the computer.
+
+---
+
+## Tech Stack
+
+**Python · LangGraph · Google Gemini API · FastAPI · Pydantic · Pytest · HTML · CSS · JavaScript · Docker · Git · GitHub**
+
+---
+
+## Demo
+
+### CodeForge Interface
+
+![CodeForge Dashboard](assets/codeforge-dashboard.png)
+
+### Successful Autonomous Validation
+
+![CodeForge Validation](assets/codeforge-validation.png)
+
+---
+
+## Example Task
 
 ```text
-.env
+Create a Python string_utils.py module with two typed functions:
+
+reverse_text(text: str) -> str
+is_palindrome(text: str) -> bool
+
+Add pytest tests for normal strings, empty strings,
+and mixed-case palindromes.
+
+Keep the implementation simple and make all tests pass.
 ```
 
-Then replace:
+For this task, CodeForge automatically:
+
+- inspected the existing workspace
+- created `string_utils.py`
+- created `test_string_utils.py`
+- ran the full pytest suite
+- validated the implementation
+- completed the task successfully
+
+Example result:
 
 ```text
-OPENAI_API_KEY=your_api_key_here
+collected 7 items
+
+test_calculator.py .....
+test_string_utils.py ..
+
+7 passed
 ```
 
-with your OpenAI API key.
+---
 
-### 3. Run
-
-Double-click:
+## Project Structure
 
 ```text
-run_windows.bat
-```
-
-or run:
-
-```bash
-run_windows.bat
-```
-
-### 4. Open
-
-```text
-http://127.0.0.1:8000
-```
-
-## Quick start — macOS / Linux
-
-```bash
-cp .env.example .env
-chmod +x run_mac_linux.sh
-./run_mac_linux.sh
-```
-
-Open:
-
-```text
-http://127.0.0.1:8000
-```
-
-## Docker
-
-Create `.env`, then:
-
-```bash
-docker compose up --build
-```
-
-Open:
-
-```text
-http://127.0.0.1:8000
-```
-
-## API
-
-### Health
-
-```http
-GET /health
-```
-
-### Workspace snapshot
-
-```http
-GET /api/workspace
-```
-
-### Run the coding agent
-
-```http
-POST /api/agent/run
-Content-Type: application/json
-```
-
-Example:
-
-```json
-{
-  "task": "Create a Python calculator module with pytest tests."
-}
-```
-
-## Suggested demo
-
-Paste this into the UI:
-
-```text
-Create a small Python expense tracker. Add expense.py with an Expense dataclass,
-functions to add expenses and calculate totals by category, and pytest tests.
-Handle invalid negative amounts with ValueError.
-```
-
-The agent should:
-
-1. inspect the current workspace
-2. produce a plan
-3. create the implementation and tests
-4. run validation
-5. automatically retry if validation fails
-
-## Run project tests
-
-```bash
-pytest
-```
-
-## Tech stack
-
-- Python
-- FastAPI
-- LangGraph
-- OpenAI Responses API
-- Pydantic
-- HTML/CSS/JavaScript
-- Pytest
-- Docker
-
-## Resume bullet
-
-**Autonomous Coding Agent — Python, LangGraph, FastAPI, OpenAI, Docker**
-
-Built an autonomous software-engineering agent that analyzes repository context, plans multi-file code changes, applies sandboxed edits, validates implementations through automated tests, and self-corrects across iterative LangGraph workflows; exposed the system through a FastAPI API and interactive web interface.
-
-## Portfolio description
-
-**CodeForge — Autonomous Coding Agent**
-
-An agentic AI system that moves beyond question-answering by executing an end-to-end software-development loop. CodeForge inspects a project workspace, plans implementation steps, modifies multiple files, runs controlled validation commands and uses test failures as feedback for autonomous correction.
-
-## Repository structure
-
-```text
-autonomous-coding-agent/
+codeforge-autonomous-coding-agent/
+│
 ├── app/
 │   ├── agent.py
 │   ├── config.py
@@ -207,15 +113,29 @@ autonomous-coding-agent/
 │   ├── main.py
 │   ├── models.py
 │   ├── workspace.py
+│   │
 │   ├── static/
 │   │   ├── app.js
 │   │   └── style.css
+│   │
 │   └── templates/
 │       └── index.html
+│
+├── assets/
+│   ├── codeforge-dashboard.png
+│   └── codeforge-validation.png
+│
 ├── tests/
 │   └── test_workspace.py
+│
 ├── workspace/
-│   └── README.md
+│   ├── calculator.py
+│   ├── string_utils.py
+│   ├── task_manager.py
+│   ├── test_calculator.py
+│   ├── test_string_utils.py
+│   └── test_task_manager.py
+│
 ├── .env.example
 ├── .gitignore
 ├── Dockerfile
@@ -224,7 +144,79 @@ autonomous-coding-agent/
 ├── run_windows.bat
 └── run_mac_linux.sh
 ```
-=======
-# autonomous-ai-incident-intelligence-platform
-Production-grade AI incident investigation platform using deep learning, agentic AI, RAG, MCP, Kubernetes and AWS.
->>>>>>> a842bb4d5a665040382b398d19a612593c30309f
+
+---
+
+## How to Run
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/shilpasiddaraj494-pixel/codeforge-autonomous-coding-agent.git
+cd codeforge-autonomous-coding-agent
+```
+
+### 2. Create a `.env` file
+
+Use `.env.example` as the template.
+
+Add:
+
+```text
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=your_available_gemini_model
+MAX_ITERATIONS=3
+```
+
+Do not commit your real `.env` file.
+
+### 3. Run on Windows
+
+```powershell
+.\run_windows.bat
+```
+
+Or:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8001
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8001
+```
+
+---
+
+## Safety
+
+CodeForge is intentionally restricted.
+
+- file changes are limited to `workspace/`
+- path traversal outside the workspace is rejected
+- arbitrary shell commands are blocked
+- only approved validation commands are allowed
+- autonomous retries are limited
+
+Supported validation commands include:
+
+```text
+pytest
+python -m pytest
+python -m unittest
+python -m compileall .
+```
+
+---
+
+## Summary
+
+CodeForge demonstrates how an LLM can be used inside a **controlled autonomous software-engineering workflow**.
+
+Instead of simply returning code, the system can:
+
+**inspect → plan → edit → test → validate → retry → complete**
+
+This makes CodeForge a practical example of **agentic AI applied to software development**.
